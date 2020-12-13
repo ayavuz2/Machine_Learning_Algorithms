@@ -5,8 +5,8 @@ from sklearn import linear_model, preprocessing
 import pandas as pd
 import numpy as np
 
+
 data = pd.read_csv("car.data")
-print(data.head())
 
 le = preprocessing.LabelEncoder() # transforming non numerical into numerical data
 buying = le.fit_transform(list(data["buying"]))
@@ -24,4 +24,17 @@ y = list(clss)
 
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.1)
 
-print(x_train, y_test)
+model = KNeighborsClassifier(n_neighbors=5)
+
+model.fit(x_train, y_train)
+
+accuracy = model.score(x_test, y_test)
+print(accuracy)
+
+predicted = model.predict(x_test)
+names = ["unaccurate", "accurate", "good", "very_good"]
+
+for x in range(len(x_test)):
+    print("Predicted: ", names[predicted[x]], "Data: ", x_test[x], "Actual Data: ", names[y_test[x]])
+    n = model.kneighbors([x_test[x]], 5, True) # returns ([distance to closest 5 points]), ([index of those points]), dtype)
+    print("N: ", n)
